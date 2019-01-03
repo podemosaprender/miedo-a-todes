@@ -2,13 +2,38 @@
 <html>
   <head>
     <meta charset="utf-8">
+		<style>
+			body { background: black; color: white; }
+		  a { color: white; text-decoration: none; border-bottom: 1px dotted }
+			#out_img { float: right; width: 6em; }
+			#out { font-size: 20pt; line-height: 1.2em; }
+			#s { width: 100%; height: 15em; }
+			.btn { text-align: right; margin: 0 1em 2em 0; }
+			#i { width: 100%; }
+			#frm_editor { visibility: hidden; }
+		</style>
   </head>
-	<body style="background: black; color: white;">
+	<body>
 	<div style="max-width: 30em; margin: 2em auto 2em auto;">
-		<img id="out_img" style="float: right; width: 6em;">
-		<style>#out a { text-decoration: none; border-bottom: 1px dotted }</style>
-		<span id="out"style="font-size: 20pt; line-height: 1.2em;"></span>
+		<img id="out_img">
+		<span id="out"></span>
+
+		<!-- editor -->
+		<div style="margin-top: 4em">
+		<div class="btn"><a id="btn_editor" href="">(poner mi texto e imagen)</a></div>
+		<form id="frm_editor">
+			<p>URL de la imagen:<br/><input id="i" name="i"/></p>
+
+			<p>Texto:<br/>
+			<textarea id="s" name="s">
+			</textarea>
+			<p>
+			<div class="btn">
+				<button class="btn" id="btn_generar">Generar</button>
+			</div>
+		</form>
 	</div>
+
 
 	<script>
 	//INFO: linkear cada palabra a la rae
@@ -44,21 +69,22 @@
 		return h;
 	}
 
-	const SrcEjemplo=`#red
-	Fustiga a "les que 
-	escriben todes"
+	const SrcEjemplo=`
+#red
+Fustiga a "les que 
+escriben todes"
 
-	#green
-	abogando por 
-	la comunicación e 
-	invocando a la RAE
+#green
+abogando por 
+la comunicación e 
+invocando a la RAE
 
-	#white
-	sin cesación ni merced maguer su aquiescencia con voces arcanas cuyo tenor te resulta inasequible haciendo mismamente conspicuo que 
+#white
+sin cesación ni merced maguer su aquiescencia con voces arcanas cuyo tenor te resulta inasequible haciendo mismamente conspicuo que 
 
-	#brown
-	sólo te animan amargos canguelo y pusilanimidad.
-	`;
+#brown
+sólo te animan acerbos canguelo y pusilanimidad.
+`;
 
 	//S: lo conectamos al DOM
 	function getParametro_url(name, url) {
@@ -72,9 +98,21 @@
 	}
 
 	
-	var src= getParametro_url("s") || SrcEjemplo; //A: si nos pasaron un texto lo usamos
+	var src= (getParametro_url("s") || SrcEjemplo).replace(/\r+/g,''); //A: si nos pasaron un texto lo usamos
+	var img= getParametro_url("i") || 'dino.png';
 	document.querySelector("#out").innerHTML= seccionesAhtml(src);
-	document.querySelector("#out_img").src= getParametro_url("i") || 'dino.png';
+	document.querySelector("#out_img").src= img;
+	//A: mostrams el texto
+	document.querySelector("#s").value= src;
+	document.querySelector("#i").value= img;
+	//A: pusimos los valores en el editor
+
+	var editor= document.querySelector("#frm_editor");
+	document.querySelector("#btn_editor").onclick= function (e) {
+		e.preventDefault(); //A: no seguir la navegacion
+		var sts= editor.style.visibility;
+		editor.style.visibility= (sts!="visible") ? "visible" : "hidden";	
+	};
 	</script>
 	</body>
 </html>
