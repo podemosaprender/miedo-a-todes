@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+	<body style="background: black; color: white;">
+	<div style="max-width: 30em; margin: 2em auto 2em auto;">
+		<img id="out_img" style="float: right; width: 6em;">
+		<span id="out"style="font-size: 20pt; line-height: 1.2em;"></span>
+	</div>
+
+	<script>
+	//INFO: linkear cada palabra a la rae
+	WESPECIALES= { "RAE": '<a target="_blank" href="http://www.rae.es/">RAE</a>' };
+	"a ni sin por la lo les los el a su sus por con te que y un una uno unas unos".split(" ").map(w => { WESPECIALES[w]= w; });
+
+	function textoAlinks(src) {
+	var w= src.split(/([^áéíóúa-z]+)/i);
+
+	var h= '';
+	for (var i=0; i<w.length-1; i+=2) {
+	if (WESPECIALES[w[i]]) {
+		h+= WESPECIALES[w[i]]+w[i+1];
+	}
+	else {
+		h+='<a target="_blank" href="http://dle.rae.es/srv/search?w='+w[i]+'">'+w[i]+"</a>"+w[i+1];	
+	}
+	}
+
+	return h.replace(/\n\n+/g,'<br style="line-height: 1.5em;">').replace(/\n/g,'<br/>\n');
+	}
+
+
+	function seccionesAhtml(src) {
+		var secciones= src.split(/\#([a-z]+)\n/i);
+		var h='';
+		h+='<span class=".seccion'+0+'">'+textoAlinks(secciones[0])+"</span>"; 
+		for (var i=1;i<secciones.length-1; i+=2) { 
+			var color= secciones[i];
+			h+='<style>.seccion'+i+' { color: '+color+' ; } .seccion'+i+' a:link, .seccion'+i+' a:visited { color: '+color+'; }</style>\n';
+			h+='<span class="seccion'+i+'">'+textoAlinks(secciones[i+1])+"</span>";
+		}
+		return h;
+	}
+
+	const SrcEjemplo=`#red
+	Fustiga a "les que 
+	escriben todes"
+
+	#green
+	abogando por 
+	la comunicación e 
+	invocando a la RAE
+
+	#white
+	sin cesación ni merced maguer su aquiescencia con voces arcanas cuyo tenor te resulta inasequible haciendo mismamente conspicuo que 
+
+	#brown
+	sólo te animan amargos canguelo y pusilanimidad.
+	`;
+
+	//S: lo conectamos al DOM
+	function getParametro_url(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
+
+	
+	var src= getParametro_url("s") || SrcEjemplo; //A: si nos pasaron un texto lo usamos
+	document.querySelector("#out").innerHTML= seccionesAhtml(src);
+	document.querySelector("#out_img").src= getParametro_url("i") || 'dino.png';
+	</script>
+	</body>
+</html>
