@@ -42,22 +42,23 @@
 	<script>
 	//INFO: linkear cada palabra a la rae
 	WESPECIALES= { "RAE": '<a target="_blank" href="http://www.rae.es/">RAE</a>' };
-	"a ni sin por la lo les los el a su sus por con te que y un una uno unas unos".split(" ").map(w => { WESPECIALES[w]= w; });
+	"a ni sin por la lo les los el a su sus por con te que y un una uno unas unos"
+		.split(" ").map(w => { WESPECIALES[w]= w; });
 
 	function textoAlinks(src) {
-	var w= src.split(/([^áéíóúa-z]+)/i);
+		var w= src.split(/([^áéíóúa-z]+)/i);
 
-	var h= '';
-	for (var i=0; i<w.length-1; i+=2) {
-	if (WESPECIALES[w[i]]) {
-		h+= WESPECIALES[w[i]]+w[i+1];
-	}
-	else {
-		h+='<a target="_blank" href="http://dle.rae.es/srv/search?w='+w[i]+'">'+w[i]+"</a>"+w[i+1];	
-	}
-	}
+		var h= '';
+		for (var i=0; i<w.length-1; i+=2) {
+			if (WESPECIALES[w[i]]) {
+				h+= WESPECIALES[w[i]]+w[i+1];
+			}
+			else {
+				h+='<a target="_blank" href="http://dle.rae.es/srv/search?w='+w[i]+'">'+w[i]+"</a>"+w[i+1];	
+			}
+		}
 
-	return h.replace(/\n\n+/g,'<br style="line-height: 1.5em;">').replace(/\n/g,'<br/>\n');
+		return h.replace(/\n\n+/g,'<br style="line-height: 1.5em;">').replace(/\n/g,'<br/>\n');
 	}
 
 
